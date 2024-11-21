@@ -1,3 +1,12 @@
+-- Crear base de datos
+CREATE DATABASE DB_ECOMMERCE;
+
+-- Conectarse a la base de datos
+\c DB_ECOMMERCE;
+
+-- Crear esquema 'dbo' dentro de la base de datos DB_ECOMMERCE
+CREATE SCHEMA dbo;
+
 --CARGA DE DATOS STAGE 
 
 CREATE TABLE dbo.STG_VENTAS(
@@ -163,3 +172,36 @@ WHEN NOT MATCHED THEN INSERT (CodigoCliente, NombreCliente,
      S.Email, S.Telefono, S.Direccion)
 
 -- VENTAS 
+MERGE INTO dbo.Ventas AS T
+USING (
+ SELECT A.VentaID    VentasId
+       ,B.ClienteID 
+       ,A.FechaVenta FechaVenta
+       ,C.RegionId
+      FROM dbo.STG_VENTAS A
+ LEFT JOIN dbo.Clientes   B ON (A.ClienteID = B.CodigoCliente)
+ LEFT JOIN dbo.Regiones   C ON (A.Region = C.NombreRegion)    
+  GROUP BY A.VentaID    
+       ,B.ClienteID 
+       ,A.FechaVenta 
+       ,C.RegionId   
+) AS S ON (T.VentasID=S.VentasID)
+WHEN NOT MATCHED THEN INSERT (VentasID, ClienteID, FechaVenta, RegionId, VendedorId) 
+	VALUES(VentasId, ClienteId, FechaVenta, RegionId, null) 
+
+-- DETALLE VENTAS 
+MERGE INTO dbo.DetallesVenta AS T
+USING (
+ SELECT 
+	A.VentaID,
+	B.ProductoID,
+	A.Cantidad,
+	B.precioUnitario as PrecioUnitario,
+	A.Cantidad * B.precioUnitario as TotalVenta
+    FROM dbo.STG_VENTAS A
+ 	LEFT JOIN dbo.Productos B ON (A.ProductoId = B.CodigoProducto)
+) AS S ON (T.VentasID=S.VentaID)
+WHEN NOT MATCHED THEN INSERT (VentasID, productoId, Cantidad, precioUnitario, totalVenta) 
+	VALUES(VentaId, ProductoId, Cantidad, PrecioUnitario, TotalVenta) 
+
+
