@@ -1,18 +1,11 @@
 -- CONSULTAS DE VALIDACION 
 -- VENTAS TOTALES POR CATEGORIA DE PRODUCTO
-SELECT C.fechaventa
-	  ,B.categoriaid as Categoria_Producto
-	  ,B.nombreproducto
-	  ,SUM(A.cantidad*B.preciounitario) as Ventas
-FROM dbo.detallesventa A 
-LEFT JOIN dbo.productos B ON (A.productoid = B.productoid)
-LEFT JOIN dbo.ventas	 C ON (A.ventasid = C.ventasid)
-GROUP BY C.fechaventa
-		,B.categoriaid
-		,B.nombreproducto
-ORDER BY C.fechaventa
-		 ,B.categoriaid
-	     ,B.nombreproducto
+SELECT B.categoriaid as Categoria_Producto    
+	,SUM(A.cantidad*B.preciounitario) as Ventas 
+FROM dbo.detallesventa A  
+LEFT JOIN dbo.productos B ON (A.productoid = B.productoid) 
+LEFT JOIN dbo.ventas  C ON (A.ventasid = C.ventasid) 
+GROUP BY B.categoriaid ORDER BY B.categoriaid DESC
 
 -- CLIENTES CON MAYOR VALOR DE COMPRA
 SELECT C.clienteid
