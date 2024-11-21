@@ -1,23 +1,39 @@
---VENTAS TOTALES POR CATEGORIA DE PRODUCTO
-SELECT a.CategoriaId,c.NombreCategoria,SUM(b.totalVenta) AS Tot_Ventas_Categoria
-FROM Productos a 
-INNER JOIN DetallesVenta b ON a.ProductoId=b.productoId
-INNER JOIN Categorias c on a.CategoriaId=c.CategoriaId
-GROUP BY a.CategoriaId,c.NombreCategoria
-ORDER BY Tot_Ventas_Categoria desc
+-- CONSULTAS DE VALIDACION 
+-- VENTAS TOTALES POR CATEGORIA DE PRODUCTO
+SELECT C.fechaventa
+	  ,B.categoriaid as Categoria_Producto
+	  ,B.nombreproducto
+	  ,SUM(A.cantidad*B.preciounitario) as Ventas
+FROM dbo.detallesventa A 
+LEFT JOIN dbo.productos B ON (A.productoid = B.productoid)
+LEFT JOIN dbo.ventas	 C ON (A.ventasid = C.ventasid)
+GROUP BY C.fechaventa
+		,B.categoriaid
+		,B.nombreproducto
+ORDER BY C.fechaventa
+		 ,B.categoriaid
+	     ,B.nombreproducto
 
---CLIENTES CON MAYOR VALOR DE COMPRA
-SELECT a.ClienteId,c.NombreCliente,SUM(v.totalVenta) as Total_Compra
-FROM  Ventas a INNER JOIN Clientes c ON a.clienteId=c.ClienteId
-	  INNER JOIN DetallesVenta v ON a.VentasId=v.VentasId
-GROUP BY a.clienteId, c.NombreCliente
-ORDER BY sum(v.totalVenta) DESC	 
+-- CLIENTES CON MAYOR VALOR DE COMPRA
+SELECT C.clienteid
+	  ,C.nombrecliente
+	  ,SUM(A.cantidad*A.preciounitario) as Ventas
+FROM dbo.detallesventa A 
+LEFT JOIN dbo.ventas   B ON (A.ventasid = B.ventasid)
+LEFT JOIN dbo.clientes C ON (B.clienteid = c.clienteid)
+GROUP BY C.clienteid
+		,C.nombrecliente
+ORDER BY SUM(A.cantidad*A.preciounitario) DESC
 
-
---PRODUCTOS MAS VENDIDOS POR REGION
-SELECT r.NombreRegion,p.NombreProducto, sum(dv.cantidad) AS Total_Ventas
-FROM   Regiones r INNER JOIN Ventas v ON r.RegionId = v.regionId 
-INNER JOIN DetallesVenta dv ON v.VentasId = dv.VentasId
-INNER JOIN Productos p ON dv.productoId = p.ProductoId  
-GROUP BY r.NombreRegion,p.NombreProducto
-ORDER BY sum(dv.cantidad) DESC
+-- PRODUCTOS MAS VENDIDOS POR REGION   
+SELECT D.nombreregion as Region
+	  ,B.nombreproducto as Producto
+	  ,SUM(A.cantidad) as Cantidad_Vendida
+FROM dbo.detallesventa A 
+LEFT JOIN dbo.productos	B ON (A.productoid = B.productoid)
+LEFT JOIN dbo.ventas	C ON (A.ventasid = C.ventasid)
+LEFT JOIN dbo.regiones	D ON (C.regionid = D.regionid)
+GROUP BY D.nombreregion
+		,B.nombreproducto
+ORDER BY D.nombreregion
+		,SUM(A.cantidad) DESC
