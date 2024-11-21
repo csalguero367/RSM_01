@@ -1,9 +1,6 @@
 -- Crear base de datos
 CREATE DATABASE DB_ECOMMERCE;
 
--- Conectarse a la base de datos
- DB_ECOMMERCE;
-
 -- Crear esquema 'dbo' dentro de la base de datos DB_ECOMMERCE
 CREATE SCHEMA dbo;
 
@@ -18,7 +15,7 @@ CREATE TABLE dbo.STG_VENTAS(
 	Region varchar(50) NOT NULL
 )
  
-COPY dbo.STG_VENTAS from 'C:\Documentos\Curso Data Analyst\Proyecto Final\Recursos-20241113\ventas.csv' DELIMITER ',' CSV HEADER; 
+COPY dbo.STG_VENTAS from 'C:\datos\ventas.csv' DELIMITER ',' CSV HEADER; 
 
 CREATE TABLE dbo.STG_CLIENTES(
 	ClienteID int NULL,
@@ -28,7 +25,7 @@ CREATE TABLE dbo.STG_CLIENTES(
 	Direccion varchar(200) NULL
 ) 
 
-COPY dbo.STG_CLIENTES from 'C:\Documentos\Curso Data Analyst\Proyecto Final\Recursos-20241113\clientes.csv' DELIMITER ',' CSV HEADER; 
+COPY dbo.STG_CLIENTES from 'C:\datos\clientes.csv' DELIMITER ',' CSV HEADER; 
 
 CREATE TABLE dbo.STG_PRODUCTOS(
 	ProductoID smallint NOT NULL,
@@ -37,12 +34,12 @@ CREATE TABLE dbo.STG_PRODUCTOS(
 	PrecioUnitario float NOT NULL
 )
 
-COPY dbo.STG_PRODUCTOS from 'C:\Documentos\Curso Data Analyst\Proyecto Final\Recursos-20241113\productos.csv' DELIMITER ',' CSV HEADER; 
+COPY dbo.STG_PRODUCTOS from 'C:\datos\productos.csv' DELIMITER ',' CSV HEADER; 
 
 --CREACION DE TABLAS 
 
 CREATE TABLE dbo.Clientes (
-    ClienteId int PRIMARY KEY,	
+    ClienteId int PRIMARY KEY,  
     NombreCliente VARCHAR(100),
     email VARCHAR(100),
     telefono VARCHAR(20),
@@ -60,7 +57,7 @@ CREATE TABLE dbo.Regiones(
 )
 
 CREATE TABLE dbo.Productos(
-	ProductoId int PRIMARY KEY,	
+	ProductoId int PRIMARY KEY, 
 	NombreProducto varchar(50) NULL,
 	CategoriaId int NULL,
 	precioUnitario decimal(10, 2) NULL
@@ -176,7 +173,7 @@ USING (
        ,A.FechaVenta FechaVenta
        ,C.RegionId
       FROM dbo.STG_VENTAS A
- LEFT JOIN dbo.Clientes   B ON (A.ClienteID = B.ClienteID)
+ LEFT JOIN dbo.Clientes   B ON (A.ClienteID = B.ClienteId)
  LEFT JOIN dbo.Regiones   C ON (A.Region = C.NombreRegion)    
   GROUP BY A.VentaID    
        ,B.ClienteID 
@@ -199,4 +196,4 @@ USING (
  	LEFT JOIN dbo.Productos B ON (A.ProductoId = B.ProductoId)
 ) AS S ON (T.VentasID=S.VentaID)
 WHEN NOT MATCHED THEN INSERT (VentasID, productoId, Cantidad, precioUnitario, totalVenta) 
-	VALUES(VentaId, ProductoId, Cantidad, PrecioUnitario, TotalVenta) 
+	VALUES(VentaId, ProductoId, Cantidad, PrecioUnitario, TotalVenta)
