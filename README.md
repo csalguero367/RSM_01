@@ -3,7 +3,11 @@ Repositorio de Entregas para trabajo final del curso "Data Analyst Jr" 10 de KOD
 
 Grupo No.5:
 Claudia Salguero Sanchez
+
 Roger Miguel España Alfaro
+
 Juan Diego Zavaleta Mejia
+
 German Ernesto Ayala Coreas
+
 Luis Antonio Escobar Argueta
