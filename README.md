@@ -1,15 +1,9 @@
 # RSM
-Repositorio de Entregas para trabajo final del curso "Data Analyst Jr" 10 de KODIGO - 2024
-
-
-Grupo No.5:
-
-Claudia Salguero Sanchez.
-
-Roger Miguel España Alfaro
-
-Juan Diego Zavaleta Mejia
-
-German Ernesto Ayala Coreas
-
+Repositorio de Entregas para trabajo final del curso "Data Analyst Jr" 10 de KODIGO - 2024<br/>
+<br/>
+Grupo No.5:<br/>
+Claudia Salguero Sanchez<br/>
+Roger Miguel España Alfaro<br/>
+Juan Diego Zavaleta Mejia<br/>
+German Ernesto Ayala Coreas<br/>
 Luis Antonio Escobar Argueta
